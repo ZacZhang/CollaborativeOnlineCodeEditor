@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import {Problem} from "../../models/problem.model";
+import {error} from "util";
 
 const DEFAULT_PROBLEM: Problem = Object.freeze({
   id: 0,
@@ -25,7 +26,9 @@ export class NewProblemComponent implements OnInit {
   }
 
   addProblem(): void {
-    this.data.addProblem(this.newProblem);
+    this.data.addProblem(this.newProblem)
+      .catch(error => console.log(error.body));
+
     this.newProblem = Object.assign({}, DEFAULT_PROBLEM);
   }
 
