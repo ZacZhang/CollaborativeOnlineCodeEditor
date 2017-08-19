@@ -1,3 +1,5 @@
+// ask MongoDb for the problems data
+
 var ProblemModel = require("../models/problemModel");
 
 var getProblems = function () {
