@@ -13,19 +13,23 @@ module.exports = function(io) {
     let sessionId = socket.handshake.query['sessionId'];
 
     socketIdToSessionId[socket.id] = sessionId;
+
     // add socket.id to corresponding collaboration session participants
     // if the sessionId already exists
     if (sessionId in collaborations) {
       collaborations[sessionId]['participants'].push(socket.id);
     } else {
+      // if redis has the sessionId
       redisClient.get(sessionPath + '/' + sessionId, function(data) {
         if (data) {
           console.log("session terminiated previsouly; pulling back from Redis.");
           collaborations[sessionId] = {
+            // list of change events
             'cachedChangeEvents': JSON.parse(data),
             'participants': []
           };
         } else {
+          // if redis doesn't has the sessionId
           console.log("creating new session");
           collaborations[sessionId] = {
             'cachedChangeEvents': [],
@@ -44,6 +48,7 @@ module.exports = function(io) {
       console.log( "change " + socketIdToSessionId[socket.id] + " " + delta ) ;
       let sessionId = socketIdToSessionId[socket.id];
 
+      // record changes
       if (sessionId in collaborations) {
         collaborations[sessionId]['cachedChangeEvents'].push(["change", delta, Date.now()]);
       }
@@ -66,6 +71,7 @@ module.exports = function(io) {
       if (sessionId in collaborations) {
         let changeEvents = collaborations[sessionId]['cachedChangeEvents'];
         for (let i = 0; i < changeEvents.length; i++) {
+          // emit: change, delta
           socket.emit(changeEvents[i][0], changeEvents[i][1]);
         }
       }
@@ -79,7 +85,9 @@ module.exports = function(io) {
         let participants = collaborations[sessionId]['participants'];
         let index = participants.indexOf(socket.id);
         if (index >= 0) {
+          // delete the one just exited
           participants.splice(index, 1);
+          // if there is no one left
           if (participants.length == 0) {
             console.log("last participant left. Storing in Redis.");
             let key = sessionPath + "/" + sessionId;

@@ -2,7 +2,7 @@
 
 import { Injectable }      from '@angular/core';
 import { tokenNotExpired } from 'angular2-jwt';
-import { Http, Response, Headers } from '@angular/http';
+import {Http, Response, Headers, RequestOptions} from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 // Avoid name not found warnings
@@ -54,13 +54,14 @@ export class AuthService {
     let profile = this.getProfile();
     let url: string = `https://${this.domain}/dbconnections/change_password`;
     let headers = new Headers({ 'content-type': 'application/json' });
+    let options = new RequestOptions({headers: headers});
     let body = {
       client_id: this.clientId,
       email: profile.email,
       connection: 'Username-Password-Authentication'
     }
 
-    this.http.post(url, body, headers)
+    this.http.post(url, body, options)
       .toPromise()
       .then((res: Response) => {
         console.log(res.json());

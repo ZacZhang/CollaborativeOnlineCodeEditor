@@ -14,13 +14,13 @@ import { DataService } from "./services/data.service";
 import { AuthService } from "./services/auth.service";
 import { AuthGuardService } from "./services/auth-guard.service";
 import { CollaborationService } from "./services/collaboration.service";
-//import { InputService } from "./services/input.service";
+import { InputService } from "./services/input.service";
 
 import { NewProblemComponent } from './components/new-problem/new-problem.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { EditorComponent } from './components/editor/editor.component';
-//import { SearchPipe } from './pipes/search.pipe';
+import { SearchPipe } from './pipes/search.pipe';
 
 @NgModule({
   declarations: [
@@ -31,7 +31,7 @@ import { EditorComponent } from './components/editor/editor.component';
     NavbarComponent,
     ProfileComponent,
     EditorComponent,
-    //SearchPipe
+    SearchPipe
   ],
   imports: [
     BrowserModule,
@@ -52,10 +52,10 @@ import { EditorComponent } from './components/editor/editor.component';
   }, {
     provide: "collaboration",
     useClass: CollaborationService
-  }/*, {
+  }, {
     provide: "input",
     useClass: InputService
-  }*/],
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

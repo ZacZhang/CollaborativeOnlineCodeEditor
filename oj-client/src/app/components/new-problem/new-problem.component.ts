@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import {Problem} from "../../models/problem.model";
-import {error} from "util";
 
 const DEFAULT_PROBLEM: Problem = Object.freeze({
   id: 0,

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Problem} from "../models/problem.model";
-import {Http, Response, Headers} from "@angular/http"
+import {Http, Response, Headers, RequestOptions} from "@angular/http"
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/toPromise';
@@ -32,7 +32,8 @@ export class DataService {
 
   addProblem(problem: Problem): Promise<Problem> {
     let headers = new Headers({'content-type': 'application/json'});
-    return this.http.post('/api/v1/problems', problem, headers)
+    let options = new RequestOptions({headers: headers});
+    return this.http.post('/api/v1/problems', problem, options)
       .toPromise()
       .then((res: Response) => {
         // refresh problems in the front end
