@@ -11,7 +11,7 @@ declare var Auth0Lock: any;
 @Injectable()
 export class AuthService {
   // Configure Auth0
-  clientId = 'BRtbzKRoonhD75aV71fATyMIUr5cYwZt';
+  clientId = 'IClDBOekwpVvymU42jgRhEnbzmLUHC5x';
   domain = 'zaczhang.auth0.com';
   lock = new Auth0Lock(this.clientId, this.domain, {});
 
@@ -58,7 +58,7 @@ export class AuthService {
     let body = {
       client_id: this.clientId,
       email: profile.email,
-      connection: 'Username-Password-Authentication'
+      connection: 'OnlineJudge-DB'
     }
 
     this.http.post(url, body, options)
