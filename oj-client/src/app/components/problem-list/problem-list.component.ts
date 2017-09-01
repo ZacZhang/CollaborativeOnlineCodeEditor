@@ -35,9 +35,7 @@ export class ProblemListComponent implements OnInit {
 
   getSearchTerm(): void {
     this.subscriptionInput = this.input.getInput()
-      .subscribe(
-        inputTerm => this.searchTerm = inputTerm
-  );
+      .subscribe(inputTerm => this.searchTerm = inputTerm);
   }
 
 }
