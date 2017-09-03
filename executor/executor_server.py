@@ -1,4 +1,5 @@
 import json
+import sys
 from flask import Flask
 from flask import request
 from flask import jsonify
@@ -12,7 +13,7 @@ def hello():
 
 @app.route("/build_and_run", methods=["POST"])
 def build_and_run():
-    print "Got called!"
+    print "Got called: %s" % (request.data)
     data = json.loads(request.data)
 
     if 'code' not in data or 'lang' not in data:
@@ -28,4 +29,7 @@ def build_and_run():
 
 if __name__ == "__main__":
     eu.load_image()
-    app.run(debug = True, threaded=True)
+
+    port = int(sys.argv[1])
+    print "Executor is running on: %d" % port
+    app.run(port=port)
