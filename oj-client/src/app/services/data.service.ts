@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import {Problem} from "../models/problem.model";
-import {Http, Response, Headers, RequestOptions} from "@angular/http"
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import { Problem } from "../models/problem.model";
+import { Http, Response, Headers, RequestOptions } from "@angular/http"
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/toPromise';
 

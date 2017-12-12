@@ -13,10 +13,6 @@ export class ProblemListComponent implements OnInit {
   problems: Problem[] = [];
   subscriptionProblems: Subscription;
 
-  birthday = new Date();
-  money = 25;
-  Apr = 0.21;
-
   searchTerm: string = '';
   subscriptionInput: Subscription;
 

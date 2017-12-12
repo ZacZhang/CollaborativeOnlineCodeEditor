@@ -4,6 +4,7 @@ import { ProblemDetailComponent } from './components/problem-detail/problem-deta
 import { ProfileComponent } from './components/profile/profile.component';
 
 
+// use different component based on different url
 const routes: Routes = [
   {
     path: '',
