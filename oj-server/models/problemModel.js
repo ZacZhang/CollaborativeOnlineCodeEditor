@@ -1,12 +1,12 @@
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
-var ProblemSchema = mongoose.Schema({
+let ProblemSchema = mongoose.Schema({
   id: Number,
   name: String,
   desc: String,
   difficulty: String
 });
 
-var problemModel = mongoose.model("ProblemModel", ProblemSchema);
+let problemModel = mongoose.model("ProblemModel", ProblemSchema);
 
 module.exports = problemModel;

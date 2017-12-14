@@ -1,14 +1,13 @@
-var express = require('express');
-var app = express();
-var restRouter = require("./routes/rest");
-var indexRouter = require("./routes/index");
-var mongoose = require("mongoose");
-var path = require("path");
-var http = require('http');
-
-var socket_io = require('socket.io');
-var io = socket_io();
-var SocketService = require('./services/SocketService')(io);
+const express = require('express');
+const app = express();
+const restRouter = require("./routes/rest");
+const indexRouter = require("./routes/index");
+const mongoose = require("mongoose");
+const path = require("path");
+const http = require('http');
+const socket_io = require('socket.io');
+const io = socket_io();
+const SocketService = require('./services/SocketService')(io);
 
 // connect to MongoDb
 mongoose.connect("mongodb://user:user@ds139909.mlab.com:39909/coj");
@@ -28,7 +27,7 @@ app.use(function (req, res) {
 });
 
 
-var server = http.createServer(app);
+let server = http.createServer(app);
 io.attach(server);
 server.listen(3000);
 
@@ -40,8 +39,8 @@ function onError(error) {
 }
 
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr == 'string'
+  let addr = server.address();
+  let bind = typeof addr === 'string'
     ? 'pipe' + addr
     : 'port' + addr.port;
   console.log('Listening on ' + bind);

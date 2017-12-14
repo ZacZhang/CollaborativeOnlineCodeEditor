@@ -1,20 +1,19 @@
+const ProblemModel = require("../models/problemModel");
+
 // ask MongoDb for the problems data
-
-var ProblemModel = require("../models/problemModel");
-
-var getProblems = function () {
-    return new Promise((resolve, reject) => {
-        ProblemModel.find({}, function (err, problems) {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(problems);
-          }
-        });
+let getProblems = function () {
+  return new Promise((resolve, reject) => {
+    ProblemModel.find({}, function (err, problems) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(problems);
+      }
     });
-}
+  });
+};
 
-var getProblem = function (id) {
+let getProblem = function (id) {
   return new Promise((resolve, reject) => {
     ProblemModel.findOne({id: id}, function (err, problem) {
       if (err) {
@@ -24,9 +23,9 @@ var getProblem = function (id) {
       }
     });
   });
-}
+};
 
-var addProblem = function (newProblem) {
+let addProblem = function (newProblem) {
   return new Promise((resolve, reject) => {
     ProblemModel.findOne({name: newProblem.name}, function (err, problem) {
       if (problem) {
@@ -34,17 +33,17 @@ var addProblem = function (newProblem) {
       } else {
         ProblemModel.count({}, function (err, num) {
           newProblem.id = num + 1;
-          var mongoProblem = new ProblemModel(newProblem);
+          let mongoProblem = new ProblemModel(newProblem);
           mongoProblem.save();
           resolve(newProblem);
         });
       }
     });
   });
-}
+};
 
 module.exports = {
   getProblems: getProblems,
   getProblem: getProblem,
   addProblem: addProblem
-}
+};
