@@ -1,5 +1,5 @@
-var redis = require('redis');
-var client = redis.createClient();
+const redis = require('redis');
+let client = redis.createClient();
 
 function set(key, value, callback) {
   client.set(key, value, function(err, res) {
@@ -35,4 +35,4 @@ module.exports = {
   expire: expire,
   quit: quit,
   redisPrint: redis.print
-}
+};

@@ -1,5 +1,5 @@
 const redisClient = require('../modules/redisClient');
-const TIMEOUT_IN_SECONDS = 3600;
+let TIMEOUT_IN_SECONDS = 3600;
 
 module.exports = function(io) {
   // collaboration sessions
@@ -25,7 +25,7 @@ module.exports = function(io) {
       // if redis has the sessionId
       redisClient.get(sessionPath + '/' + sessionId, function(data) {
         if (data) {
-          console.log("session terminiated previsouly; pulling back from Redis.");
+          console.log("session terminated previously; pulling back from Redis.");
           collaborations[sessionId] = {
             // list of change events
             'cachedChangeEvents': JSON.parse(data),
@@ -53,7 +53,7 @@ module.exports = function(io) {
       // 拿到这个socket id对应的session id
       let sessionId = socketIdToSessionId[socket.id];
 
-      // record changes
+      // 记录change list
       if (sessionId in collaborations) {
         collaborations[sessionId]['cachedChangeEvents'].push(["change", delta, Date.now()]);
       }
@@ -64,7 +64,7 @@ module.exports = function(io) {
 
     // handle 'cursorMove' events
     socket.on('cursorMove', cursor => {
-      console.log( "cursorMove " + socketIdToSessionId[socket.id] + " " + cursor ) ;
+      console.log( "cursorMove " + socketIdToSessionId[socket.id] + " " + cursor) ;
       cursor = JSON.parse(cursor);
       cursor['socketId'] = socket.id;
 
@@ -83,6 +83,7 @@ module.exports = function(io) {
       }
     });
 
+    // 如果全部人都离开了，把change list存到redis
     socket.on('disconnect', function() {
       let sessionId = socketIdToSessionId[socket.id];
       console.log('socket ' + socket.id + 'disconnected.');

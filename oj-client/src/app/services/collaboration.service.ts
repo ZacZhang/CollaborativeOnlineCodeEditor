@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { COLORS } from '../../assets/colors';
 
 declare var io: any;
@@ -19,6 +18,7 @@ export class CollaborationService {
     this.collaborationSocket = io(window.location.origin, { query: 'sessionId=' + sessionId });
 
     // 监听server上传过来的change事件
+    // monitor "cursorMove" event from server
     this.collaborationSocket.on("change", (delta: string) => {
       console.log('collaboration: editor changes by ' + delta);
       delta = JSON.parse(delta);
@@ -27,6 +27,7 @@ export class CollaborationService {
     });
 
 
+    // 监听server上传过来的cursorMove事件
     // monitor "cursorMove" event from server
     this.collaborationSocket.on("cursorMove", (cursor) => {
       console.log("cursor move: " + cursor);
@@ -67,15 +68,17 @@ export class CollaborationService {
     })
   }
 
-  // client端向server端发送change
+  // client端向server端发送change event
   change(delta: string): void {
     this.collaborationSocket.emit("change", delta);
   }
 
+  // client端向server端发送cursorMove event
   cursorMove(cursor : string): void {
     this.collaborationSocket.emit("cursorMove", cursor);
   }
 
+  // client端告诉server端，需要change list来同步到已经编辑的代码
   restoreBuffer(): void {
     this.collaborationSocket.emit("restoreBuffer");
   }
