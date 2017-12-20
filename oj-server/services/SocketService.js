@@ -1,17 +1,20 @@
-var redisClient = require('../modules/redisClient');
+const redisClient = require('../modules/redisClient');
 const TIMEOUT_IN_SECONDS = 3600;
 
 module.exports = function(io) {
   // collaboration sessions
-  var collaborations = [];
+  let collaborations = [];
   // map from socketId to sessionId
-  var socketIdToSessionId = [];
+  let socketIdToSessionId = [];
 
-  var sessionPath = "/temp_sessions";
+  let sessionPath = "/temp_sessions";
 
+  // server在监听connection事件
   io.on('connection', socket => {
+    // 建立连接之后，去拿session id
     let sessionId = socket.handshake.query['sessionId'];
 
+    // 给socket id指定对应的session id，session id就是problem id
     socketIdToSessionId[socket.id] = sessionId;
 
     // add socket.id to corresponding collaboration session participants
@@ -29,7 +32,7 @@ module.exports = function(io) {
             'participants': []
           };
         } else {
-          // if redis doesn't has the sessionId
+          // if redis doesn't has the sessionId, create new session
           console.log("creating new session");
           collaborations[sessionId] = {
             'cachedChangeEvents': [],
@@ -44,8 +47,10 @@ module.exports = function(io) {
     // socket event listeners
     // handle 'change' event
     // receive a request from a client and transmit it to other clients which in the same session
+    // server端收到client端的change event
     socket.on('change', delta => {
       console.log( "change " + socketIdToSessionId[socket.id] + " " + delta ) ;
+      // 拿到这个socket id对应的session id
       let sessionId = socketIdToSessionId[socket.id];
 
       // record changes
@@ -53,6 +58,7 @@ module.exports = function(io) {
         collaborations[sessionId]['cachedChangeEvents'].push(["change", delta, Date.now()]);
       }
 
+      // 把change转发给在同一个session里的其他人
       forwardEvents(socket.id, 'change', delta);
     });
 
@@ -88,7 +94,7 @@ module.exports = function(io) {
           // delete the one just exited
           participants.splice(index, 1);
           // if there is no one left
-          if (participants.length == 0) {
+          if (participants.length === 0) {
             console.log("last participant left. Storing in Redis.");
             let key = sessionPath + "/" + sessionId;
             let value = JSON.stringify(collaborations[sessionId]['cachedChangeEvents']);
@@ -107,7 +113,7 @@ module.exports = function(io) {
         let participants = collaborations[sessionId]['participants'];
         for (let i = 0; i < participants.length; i++) {
           // if not itself
-          if (socket.id != participants[i]) {
+          if (socket.id !== participants[i]) {
             io.to(participants[i]).emit(eventName, dataString);
           }
         }
@@ -116,4 +122,4 @@ module.exports = function(io) {
       }
     }
   });
-}
+};

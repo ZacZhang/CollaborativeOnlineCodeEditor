@@ -15,10 +15,10 @@ export class CollaborationService {
   constructor() { }
 
   init(editor: any, sessionId: string): void {
-    // send to server
+    // 发送handshake，与server建立连接，并把session id传过去
     this.collaborationSocket = io(window.location.origin, { query: 'sessionId=' + sessionId });
 
-    // monitor "change" event from server
+    // 监听server上传过来的change事件
     this.collaborationSocket.on("change", (delta: string) => {
       console.log('collaboration: editor changes by ' + delta);
       delta = JSON.parse(delta);
@@ -67,7 +67,7 @@ export class CollaborationService {
     })
   }
 
-  // send
+  // client端向server端发送change
   change(delta: string): void {
     this.collaborationSocket.emit("change", delta);
   }

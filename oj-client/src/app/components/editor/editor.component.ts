@@ -57,7 +57,7 @@ export class EditorComponent implements OnInit {
 
   initEditor() {
     this.editor = ace.edit('editor');
-    this.editor.setTheme('ace/theme/monokai');
+    this.editor.setTheme('ace/theme/eclipse');
     this.resetEditor();
     this.editor.$blockScrolling = Infinity;
 
@@ -70,7 +70,7 @@ export class EditorComponent implements OnInit {
     this.editor.on('change', (e) => {
       console.log('editor changes: ' + JSON.stringify(e));
 
-      // if the change different from the last change
+      // 如果当前的change和上次的change不一样，则通过collaboration发送出去
       if (this.editor.lastAppliedChange != e) {
         this.collaboration.change(JSON.stringify(e));
       }
