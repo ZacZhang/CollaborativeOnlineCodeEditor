@@ -2,7 +2,6 @@ import docker
 import uuid
 import os
 import shutil
-
 from docker.errors import *
 
 IMAGE_NAME = "zaczhang19/onlinejudge-executor"
@@ -33,6 +32,7 @@ EXECUTE_COMMANDS = {
 
 client = docker.from_env()
 
+
 def load_image():
 	try:
 		client.images.get(IMAGE_NAME)
@@ -44,11 +44,14 @@ def load_image():
 		return
 	print "Image:[%s] loaded" % IMAGE_NAME 
 
+
 def build_and_run(code, lang):
 	result = {'build': None, 'run': None, 'error': None}
 
 	source_file_parent_dir_name = uuid.uuid4()
+	# folder in the host machine
 	source_file_host_dir = "%s/%s" % (TEMP_BUILD_DIR, source_file_parent_dir_name)
+	# folder in the docker container
 	source_file_guest_dir = "/test/%s" % (source_file_parent_dir_name)
 	make_dir(source_file_host_dir)
 
@@ -59,6 +62,7 @@ def build_and_run(code, lang):
 		client.containers.run(
 			image=IMAGE_NAME,
 			command="%s %s" % (BUILD_COMMANDS[lang], SOURCE_FILE_NAMES[lang]),
+			# map host folder to docker container folder 
 			volumes={source_file_host_dir: {'bind': source_file_guest_dir, 'mode': 'rw'}},
 			working_dir=source_file_guest_dir)
 		print "source built."
@@ -66,9 +70,9 @@ def build_and_run(code, lang):
 	except ContainerError as e:
 		print "Build failed."
 		result['build'] = e.stderr
+		# remove folder
 		shutil.rmtree(source_file_host_dir)
 		return result
-
 
 	try:
 		log = client.containers.run(
@@ -94,3 +98,4 @@ def make_dir(dir):
 		print "Temp build directory [%s] created." % dir
 	except OSError:
 		print "Temp build directory [%s] exists." % dir
+

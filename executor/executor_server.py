@@ -7,10 +7,6 @@ import executor_utils as eu
 
 app = Flask(__name__)
 
-@app.route("/")
-def hello():
-    return "how old are you"
-
 @app.route("/build_and_run", methods=["POST"])
 def build_and_run():
     print "Got called: %s" % (request.data)
